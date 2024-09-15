@@ -18,7 +18,7 @@ if (NOT raylib_FOUND)
 endif()
 
 file(GLOB_RECURSE SRC_FILES src/*.c)
-add_executable(tetris ${SRC_FILES})
+add_executable(snake2 ${SRC_FILES})
 
-target_link_libraries(tetris raylib)
-target_include_directories(tetris PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(snake2 raylib)
+target_include_directories(snake2 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
