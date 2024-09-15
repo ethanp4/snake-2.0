@@ -49,7 +49,10 @@ void drawText() {
   DrawText(debugText, 25, 75, debugFontSize, fontColor);
 
   snprintf(debugText, 100, "PlayerPosition x: %.2f, y: %.2f", playerPos.x, playerPos.y);
-  snprintf(debugText, 100, "Length: %i, histSize: %i", playerLength, positionHistorySize);
+  // snprintf(debugText, 100, "Length: %i, histSize: %i", playerLength);
+  for (int i = 0; i < playerLength; i++) {
+    snprintf(debugText + strlen(debugText), 100, "\n%i: %.0f, %.0f", i, positionHistory[i].x, positionHistory[i].y);
+  }
   DrawText(debugText, 350, 75, debugFontSize, fontColor);
 }
 
@@ -81,8 +84,9 @@ void drawObjects() {
   }
 
   for (int i = 0; i < playerLength; i++) {
-    pixel.x = positionHistory[i]->x*unitPxlSize+borderThickness;
-    pixel.y = positionHistory[i]->y*unitPxlSize+borderRect.y+borderThickness;
+  // for (int i = playerLength; i > 0; i--) {
+    pixel.x = positionHistory[i].x*unitPxlSize+borderThickness;
+    pixel.y = positionHistory[i].y*unitPxlSize+borderRect.y+borderThickness;
     DrawRectangleRec(pixel, playerColor);    
   }
   // pixel.x = playerPrevPosition.x*unitPxlSize+borderThickness;

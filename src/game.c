@@ -16,18 +16,17 @@ enum dirs movementDir = UP; //might change this
 //(playAreaLengthUnits)
 Vector2 playerPos = {20,20};
 
-int** playField;
-Vector2** positionHistory;
-int positionHistorySize;
+int playField[40][40];
+Vector2 positionHistory[200];
 
 void initGame() {
   int squares = playAreaLengthUnits*playAreaLengthUnits;
   //realloc dimension x
-  playField = realloc(playField, sizeof(int)*playAreaLengthUnits);
+  // playField = realloc(playField, sizeof(int)*playAreaLengthUnits);
 
   //malloc each row (dimension y)
   for (int x = 0; x < playAreaLengthUnits; x++) {
-    playField[x] = (int*)malloc(sizeof(int)*playAreaLengthUnits);
+    // playField[x] = (int*)malloc(sizeof(int)*playAreaLengthUnits);
 
     //initialize the array
     for (int y = 0; y < playAreaLengthUnits; y++) {
@@ -41,36 +40,27 @@ void initGame() {
   }
   movementDir = GetRandomValue(0, 3);
   // printf("Made %i food and %i none", foodCount, squares-foodCount);
-  positionHistory = realloc(positionHistory, sizeof(Vector2)*(playerLength+1));
-  positionHistorySize = 0;
 }
 
 void movePlayer() {
   playField[(int)playerPos.x][(int)playerPos.y] = NONE;
 
-  // no need to rearrange when theres only one element
-  // if (playerLength == 1) {
-  //   positionHistorySize = 1;
-  // }
-  if (playerLength > positionHistorySize) {
-    positionHistory = realloc(positionHistory, sizeof(Vector2)*(playerLength+1));
-    positionHistorySize += 1;
+  //shift elements over by one to make room for the newest element
+  for (int i = playerLength; i > 0; i--) {
+    //current element = the element to before it
+    positionHistory[i] = positionHistory[i-1]; 
   }
-
-  // for (int i = 0; i < playerLength-1; i++) {
-  for (int i = playerLength; i > 1; i--) {
-    positionHistory[i-1] = positionHistory[i]; 
-  }
-  positionHistory[0] = &playerPos;
+  //set the newest element before adding the movement dir
+  positionHistory[0] = playerPos;
 
   playerPos = Vector2Add(playerPos, dirs[movementDir]);
-  if (playerPos.x > playAreaLengthUnits) {
+  if (playerPos.x > playAreaLengthUnits-1) {
     playerPos.x = 0;
   }
   if (playerPos.x < 0) {
     playerPos.x = playAreaLengthUnits-1;
   }
-  if (playerPos.y > playAreaLengthUnits) {
+  if (playerPos.y > playAreaLengthUnits-1) {
     playerPos.y = 0;
   }
   if (playerPos.y < 0) {

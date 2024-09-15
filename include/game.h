@@ -11,10 +11,9 @@ extern Vector2 dirs[4];
 
 extern enum dirs movementDir;
 extern Vector2 playerPos;
-extern Vector2** positionHistory; //adjust size as needed
-extern int positionHistorySize;
+extern Vector2 positionHistory[200]; //i cant make this dynamically allocated
 
-extern int** playField; //allocated on init
+extern int playField[40][40]; //allocated on init
 
 void movePlayer();
 void initGame();
