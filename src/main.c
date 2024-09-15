@@ -10,15 +10,18 @@ int main() {
   initGame();
 
   while (!WindowShouldClose()) {
-    handleInput();
     BeginDrawing();
+      handleInput();
       drawBackground();
       drawText();
 
       moveTimer += GetFrameTime();
       if (moveTimer > 0.25) {
-        movePlayer();
-        moveTimer = 0;
+        if (!gameOverFlag) {
+          movePlayer();
+          moveTimer = 0;
+
+        }
       }
 
       drawObjects();

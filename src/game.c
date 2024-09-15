@@ -1,15 +1,17 @@
 #include "game.h"
 #include "drawing.h"
+#include "input.h"
 #include "raylib.h"
 #include "raymath.h"
-#include <stdio.h>
 #include <stdlib.h>
+
+bool gameOverFlag = false;
 
 int playerLength = 0;
 int highScore = 0;
 int foodCount = 0;
 
-Vector2 dirs[4] = { {0,-1}, {0,1}, {-1,0}, {1,0}};
+Vector2 dirs[4] = { {0,-1}, {0,1}, {-1,0}, {1,0} };
 enum dirs movementDir = UP; //might change this
 
 //using local coordinates
@@ -21,7 +23,7 @@ Vector2 positionHistory[200];
 
 void initGame() {
   int squares = playAreaLengthUnits*playAreaLengthUnits;
-  //realloc dimension x
+  // realloc dimension x
   // playField = realloc(playField, sizeof(int)*playAreaLengthUnits);
 
   //malloc each row (dimension y)
@@ -42,8 +44,22 @@ void initGame() {
   // printf("Made %i food and %i none", foodCount, squares-foodCount);
 }
 
+void gameOver() {
+  gameOverFlag = true;
+}
+
 void movePlayer() {
   playField[(int)playerPos.x][(int)playerPos.y] = NONE;
+  ///unset the collision of the tail before updating it
+  for (int i = 0; i < playerLength; i++) {
+    playField[(int)positionHistory[i].x][(int)positionHistory[i].y] = NONE;
+  }
+  //shift the input queue
+  if (currentInput != NO_INPUT){
+    movementDir = currentInput;
+    currentInput = queuedInput;
+    queuedInput = NO_INPUT;
+  }
 
   //shift elements over by one to make room for the newest element
   for (int i = playerLength; i > 0; i--) {
@@ -67,9 +83,19 @@ void movePlayer() {
     playerPos.y = playAreaLengthUnits-1;
   }
 
+  ///set the collision of the tail
+  for (int i = 0; i < playerLength; i++) {
+  // for (int i = playerLength; i > 0; i--) {
+    playField[(int)positionHistory[i].x][(int)positionHistory[i].y] = PLAYER;
+  }
+
+  //check the collision
   if (playField[(int)playerPos.x][(int)playerPos.y] == FOOD) {
     playerLength++;
     foodCount--;
+  }
+  if (playField[(int)playerPos.x][(int)playerPos.y] == PLAYER) {
+    gameOver();
   }
 
   playField[(int)playerPos.x][(int)playerPos.y] = PLAYER;

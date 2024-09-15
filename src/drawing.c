@@ -29,6 +29,7 @@ const int playAreaLengthUnits = 40;
 const int unitPxlSize = playAreaLength / playAreaLengthUnits;
 
 void drawText() {
+  if (gameOverFlag) { return; } //temporary gameover behaviour
   char infoText [100];
   double timeElapsed = GetTime();
 
@@ -83,14 +84,11 @@ void drawObjects() {
     }
   }
 
-  for (int i = 0; i < playerLength; i++) {
-  // for (int i = playerLength; i > 0; i--) {
-    pixel.x = positionHistory[i].x*unitPxlSize+borderThickness;
-    pixel.y = positionHistory[i].y*unitPxlSize+borderRect.y+borderThickness;
-    DrawRectangleRec(pixel, playerColor);    
-  }
-  // pixel.x = playerPrevPosition.x*unitPxlSize+borderThickness;
-  // pixel.y = playerPrevPosition.y*unitPxlSize+borderRect.y+borderThickness;
-  // DrawRectangleRec(pixel, backgroundColor);
-
+  // //draw the tail
+  // for (int i = 0; i < playerLength; i++) {
+  // // for (int i = playerLength; i > 0; i--) {
+  //   pixel.x = positionHistory[i].x*unitPxlSize+borderThickness;
+  //   pixel.y = positionHistory[i].y*unitPxlSize+borderRect.y+borderThickness;
+  //   DrawRectangleRec(pixel, playerColor);    
+  // }
 }

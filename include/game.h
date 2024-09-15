@@ -5,9 +5,11 @@
 extern int playerLength;
 extern int highScore;
 extern int foodCount;
-enum objects{ NONE, PLAYER, FOOD};
-enum dirs { UP, DOWN, LEFT, RIGHT };
+enum objects{ NONE, PLAYER, FOOD };
+enum dirs { UP, DOWN, LEFT, RIGHT, NO_INPUT };
 extern Vector2 dirs[4];
+
+extern bool gameOverFlag;
 
 extern enum dirs movementDir;
 extern Vector2 playerPos;
