@@ -3,23 +3,25 @@
 #include <../include/input.h>
 #include <../include/drawing.h>
 
-#include <stdlib.h>
-#include <time.h>
-
-//numerical constants
-
 int main() {
   InitWindow(resolution.x, resolution.y, "Snake 2.0");
   SetTargetFPS(60);
-
+  float moveTimer = 0;
   initGame();
 
   while (!WindowShouldClose()) {
+    handleInput();
     BeginDrawing();
       drawBackground();
       drawText();
-      handleInput();
-      
+
+      moveTimer += GetFrameTime();
+      if (moveTimer > 0.25) {
+        movePlayer();
+        moveTimer = 0;
+      }
+
+      drawObjects();
 
     EndDrawing();
   }
