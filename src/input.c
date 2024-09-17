@@ -1,6 +1,6 @@
-#include "../include/input.h"
-#include "../include/drawing.h"
-#include "../include/game.h"
+#include "input.h"
+#include "drawing.h"
+#include "game.h"
 #include <raylib.h>
 
 //this is to allow queuing one input, and preventing the player from changing the direction twice 
@@ -17,8 +17,6 @@ void handleInput() {
   if (IsKeyPressed(KEY_BACKSPACE)) { gameOverFlag = true; }
   if (IsKeyPressed(KEY_SPACE) && gameOverFlag) { restartGame(); }
 
-  //verify that the previous movement (movementDir or currentInput) is not opposite
-  //of the direction that is being pressed
   if (currentInput == NO_INPUT){
     if (IsKeyPressed(KEY_UP)) { 
       if (movementDir != DOWN ) { currentInput = UP; }

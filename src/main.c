@@ -1,7 +1,7 @@
 #include "game.h"
 #include "raylib.h"
-#include <../include/input.h>
-#include <../include/drawing.h>
+#include <input.h>
+#include <drawing.h>
 
 int main() {
   InitWindow(resolution.x, resolution.y, "Snake 2.0");
@@ -15,7 +15,6 @@ int main() {
     handleInput();
     if (!gameOverFlag) {
       timeElapsed = GetTime() - startTime;
-      // avoid calling this twice (who knows how long it takes to call)
       moveTimer += GetFrameTime();
       spawnTimer += GetFrameTime();
       if (moveTimer > 0.20) {

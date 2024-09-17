@@ -1,5 +1,5 @@
-#include "../include/game.h"
-#include "../include/drawing.h"
+#include "game.h"
+#include "drawing.h"
 #include <raylib.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,8 +20,8 @@ const Color fontColor = borderColor;
 const Color gameOverFontColor = { 102, 20, 0, 255 };
 
 //top 200 pixels will be for info text
-const int borderThickness = 20;
 Rectangle borderRect = {0, 200, resolution.x, resolution.x};
+const int borderThickness = 20;
 const int playAreaLength = resolution.x-(borderThickness*2);
 //number of "units" across the play area (positions the player can be in)
 const int playAreaLengthUnits = 40;
@@ -88,12 +88,4 @@ void drawObjects() {
       DrawRectangleRec(pixel, pixelColor);
     }
   }
-
-  // //draw the tail
-  // for (int i = 0; i < playerLength; i++) {
-  // // for (int i = playerLength; i > 0; i--) {
-  //   pixel.x = positionHistory[i].x*unitPxlSize+borderThickness;
-  //   pixel.y = positionHistory[i].y*unitPxlSize+borderRect.y+borderThickness;
-  //   DrawRectangleRec(pixel, playerColor);    
-  // }
 }
