@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <string.h>
 
-bool debug = true;
+bool debug = false;
 const Vector2 resolution = {800, 1000};
 
 const int fontSize = 40;
 const int debugFontSize = 20;
+const int gameOverFontSize = 100;
 
 //color constants (for now)
 const Color backgroundColor = {116, 115, 20, 255};
@@ -16,6 +17,7 @@ const Color borderColor = {80, 79, 14, 255};
 const Color playerColor = {45,45,8,255};
 const Color foodColor = {207, 143, 8, 255};
 const Color fontColor = borderColor;
+const Color gameOverFontColor = { 102, 20, 0, 255 };
 
 //top 200 pixels will be for info text
 const int borderThickness = 20;
@@ -29,9 +31,12 @@ const int playAreaLengthUnits = 40;
 const int unitPxlSize = playAreaLength / playAreaLengthUnits;
 
 void drawText() {
-  if (gameOverFlag) { return; } //temporary gameover behaviour
+  if (gameOverFlag) { 
+    DrawText("Gameover", 170, resolution.y/2, gameOverFontSize, gameOverFontColor);
+    DrawText("Press space to restart", 210, resolution.y/2+100, gameOverFontSize/3, gameOverFontColor);
+    // return; 
+  } 
   char infoText [100];
-  double timeElapsed = GetTime();
 
   snprintf(infoText, 11, "Score: %i  ", playerLength);
   snprintf(infoText + strlen(infoText), 15, "Time: %.0f  ", timeElapsed);

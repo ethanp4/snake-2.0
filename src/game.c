@@ -3,13 +3,15 @@
 #include "input.h"
 #include "raylib.h"
 #include "raymath.h"
-#include <stdlib.h>
 
 bool gameOverFlag = false;
 
 int playerLength = 0;
 int highScore = 0;
 int foodCount = 0;
+//the GetTime() of when the current life started
+float startTime = 0;
+float timeElapsed = 0;
 
 Vector2 dirs[4] = { {0,-1}, {0,1}, {-1,0}, {1,0} };
 enum dirs movementDir = UP; //might change this
@@ -99,4 +101,26 @@ void movePlayer() {
   }
 
   playField[(int)playerPos.x][(int)playerPos.y] = PLAYER;
+}
+
+//for spawning food after initalization
+void spawnFood() {
+  if (foodCount > 15) { return; }
+  for (int x = 0; x < playAreaLengthUnits; x++) {
+    for (int y = 0; y < playAreaLengthUnits; y++) {
+      if (GetRandomValue(0, playAreaLengthUnits*playAreaLengthUnits) < 5) {  //spawn around 5 each time
+        if (playField[x][y] != NONE) { continue; }
+        playField[x][y] = FOOD;
+        foodCount++;
+      } 
+    }
+  }
+}
+
+void restartGame() {
+  initGame();
+  if (playerLength > highScore) { highScore = playerLength; }
+  playerLength = 0;
+  startTime = GetTime();
+  gameOverFlag = false;
 }

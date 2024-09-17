@@ -14,6 +14,8 @@ enum dirs queuedInput = NO_INPUT;
 
 void handleInput() {
   if (IsKeyPressed(KEY_GRAVE)) { debug = !debug; }
+  if (IsKeyPressed(KEY_BACKSPACE)) { gameOverFlag = true; }
+  if (IsKeyPressed(KEY_SPACE) && gameOverFlag) { restartGame(); }
 
   //verify that the previous movement (movementDir or currentInput) is not opposite
   //of the direction that is being pressed
