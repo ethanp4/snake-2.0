@@ -9,6 +9,7 @@ int main() {
   float moveTimer = 0;
   float spawnTimer = 0;
   initGame();
+  mode = BOT;
 
   while (!WindowShouldClose()) {
     //logic before drawing
@@ -18,7 +19,9 @@ int main() {
       moveTimer += GetFrameTime();
       spawnTimer += GetFrameTime();
       if (moveTimer > 0.20) {
+          if (mode == BOT) { moveBot(); }
           movePlayer();
+          // checkCollision(); //this will need to be separate if there are two moving players
           moveTimer = 0;
       }
       if (spawnTimer > 6) {

@@ -49,7 +49,7 @@ void drawText() {
   Vector2 mousePos = GetMousePosition();
   snprintf(debugText, 100, "Mouse position: x: %.0f y: %.0f", mousePos.x, mousePos.y);
   snprintf(debugText + strlen(debugText), 100, "\n\nFoodCount: %i", foodCount);
-  snprintf(debugText + strlen(debugText), 100, "\n\nMovement dir: %i", movementDir);
+  snprintf(debugText + strlen(debugText), 100, "\n\nMovement dir: %i", playerMovementDir);
   snprintf(debugText + strlen(debugText), 100, "\n\nGetTime: %.2f", GetTime());
   snprintf(debugText + strlen(debugText), 100, "  GetFrameTime: %.4f", GetFrameTime());
   DrawText(debugText, 25, 75, debugFontSize, fontColor);
@@ -57,7 +57,7 @@ void drawText() {
   snprintf(debugText, 100, "PlayerPosition x: %.2f, y: %.2f", playerPos.x, playerPos.y);
   // snprintf(debugText, 100, "Length: %i, histSize: %i", playerLength);
   for (int i = 0; i < playerLength; i++) {
-    snprintf(debugText + strlen(debugText), 100, "\n%i: %.0f, %.0f", i, positionHistory[i].x, positionHistory[i].y);
+    snprintf(debugText + strlen(debugText), 100, "\n%i: %.0f, %.0f", i, playerPositionHistory[i].x, playerPositionHistory[i].y);
   }
   DrawText(debugText, 350, 75, debugFontSize, fontColor);
 }

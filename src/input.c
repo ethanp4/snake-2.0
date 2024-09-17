@@ -19,16 +19,16 @@ void handleInput() {
 
   if (currentInput == NO_INPUT){
     if (IsKeyPressed(KEY_UP)) { 
-      if (movementDir != DOWN ) { currentInput = UP; }
+      if (playerMovementDir != DOWN ) { currentInput = UP; }
     }
     if (IsKeyPressed(KEY_DOWN)) {
-      if (movementDir != UP) { currentInput = DOWN; }
+      if (playerMovementDir != UP) { currentInput = DOWN; }
     }
     if (IsKeyPressed(KEY_RIGHT)) {
-      if (movementDir != LEFT) { currentInput = RIGHT; }
+      if (playerMovementDir != LEFT) { currentInput = RIGHT; }
     }
     if (IsKeyPressed(KEY_LEFT)) {
-      if (movementDir != RIGHT) { currentInput = LEFT; }
+      if (playerMovementDir != RIGHT) { currentInput = LEFT; }
     }
   } else if (queuedInput == NO_INPUT) {
     if (IsKeyPressed(KEY_UP)) { 

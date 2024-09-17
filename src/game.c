@@ -6,7 +6,10 @@
 
 bool gameOverFlag = false;
 
-int playerLength = 0;
+enum dirs playerMovementDir = UP;
+enum dirs botMovementDir = DOWN;
+enum mode mode;
+
 int highScore = 0;
 int foodCount = 0;
 //the GetTime() of when the current life started
@@ -14,14 +17,15 @@ float startTime = 0;
 float timeElapsed = 0;
 
 Vector2 dirs[4] = { {0,-1}, {0,1}, {-1,0}, {1,0} };
-enum dirs movementDir = UP; //might change this
-
-//using local coordinates
-//(playAreaLengthUnits)
-Vector2 playerPos = {20,20};
 
 int playField[40][40];
-Vector2 positionHistory[200];
+
+int playerLength = 0;
+int botLength = 0;
+Vector2 playerPos = {25, 25};
+Vector2 botPos = {15, 15};
+Vector2 playerPositionHistory[200];
+Vector2 botPositionHistory[200];
 
 void initGame() {
   int squares = playAreaLengthUnits*playAreaLengthUnits;
@@ -42,7 +46,8 @@ void initGame() {
       }
     }
   }
-  movementDir = GetRandomValue(0, 3);
+  playerMovementDir = GetRandomValue(0, 3);
+  botMovementDir = GetRandomValue(0, 3);
   // printf("Made %i food and %i none", foodCount, squares-foodCount);
 }
 
@@ -54,11 +59,11 @@ void movePlayer() {
   playField[(int)playerPos.x][(int)playerPos.y] = NONE;
   ///unset the collision of the tail before updating it
   for (int i = 0; i < playerLength; i++) {
-    playField[(int)positionHistory[i].x][(int)positionHistory[i].y] = NONE;
+    playField[(int)playerPositionHistory[i].x][(int)playerPositionHistory[i].y] = NONE;
   }
   //shift the input queue
   if (currentInput != NO_INPUT){
-    movementDir = currentInput;
+    playerMovementDir = currentInput;
     currentInput = queuedInput;
     queuedInput = NO_INPUT;
   }
@@ -66,12 +71,12 @@ void movePlayer() {
   //shift elements over by one to make room for the newest element
   for (int i = playerLength; i > 0; i--) {
     //current element = the element to before it
-    positionHistory[i] = positionHistory[i-1]; 
+    playerPositionHistory[i] = playerPositionHistory[i-1]; 
   }
   //set the newest element before adding the movement dir
-  positionHistory[0] = playerPos;
+  playerPositionHistory[0] = playerPos;
 
-  playerPos = Vector2Add(playerPos, dirs[movementDir]);
+  playerPos = Vector2Add(playerPos, dirs[playerMovementDir]);
   if (playerPos.x > playAreaLengthUnits-1) {
     playerPos.x = 0;
   }
@@ -88,7 +93,7 @@ void movePlayer() {
   ///set the collision of the tail
   for (int i = 0; i < playerLength; i++) {
   // for (int i = playerLength; i > 0; i--) {
-    playField[(int)positionHistory[i].x][(int)positionHistory[i].y] = PLAYER;
+    playField[(int)playerPositionHistory[i].x][(int)playerPositionHistory[i].y] = PLAYER;
   }
 
   //check the collision
@@ -123,4 +128,8 @@ void restartGame() {
   playerLength = 0;
   startTime = GetTime();
   gameOverFlag = false;
+}
+
+void moveBot() {
+
 }
