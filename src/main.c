@@ -16,9 +16,8 @@ int main() {
     if (!gameOverFlag) {
       timeElapsed = GetTime() - startTime;
       // avoid calling this twice (who knows how long it takes to call)
-      float ft = GetFrameTime();
-      moveTimer += ft;
-      spawnTimer += ft;
+      moveTimer += GetFrameTime();
+      spawnTimer += GetFrameTime();
       if (moveTimer > 0.20) {
           movePlayer();
           moveTimer = 0;
