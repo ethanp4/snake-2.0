@@ -25,7 +25,7 @@ extern Vector2 botPos;
 
 extern Vector2 playerPositionHistory[200]; //i cant make this dynamically allocated
 extern Vector2 botPositionHistory[200];
-extern int playField[40][40]; //allocated on init
+extern int** playField;
 
 void movePlayer();
 void moveBot();

@@ -3,6 +3,8 @@
 #include "input.h"
 #include "raylib.h"
 #include "raymath.h"
+#include <stdlib.h>
+#include <assert.h>
 
 bool gameOverFlag = false;
 
@@ -18,7 +20,7 @@ float timeElapsed = 0;
 
 Vector2 dirs[4] = { {0,-1}, {0,1}, {-1,0}, {1,0} };
 
-int playField[40][40];
+int** playField;
 
 int playerLength = 0;
 int botLength = 0;
@@ -29,16 +31,12 @@ Vector2 botPositionHistory[200];
 
 void initGame() {
   int squares = playAreaLengthUnits*playAreaLengthUnits;
-  // realloc dimension x
-  // playField = realloc(playField, sizeof(int)*playAreaLengthUnits);
 
-  //malloc each row (dimension y)
+  playField = malloc((sizeof(int*)*playAreaLengthUnits));
   for (int x = 0; x < playAreaLengthUnits; x++) {
-    // playField[x] = (int*)malloc(sizeof(int)*playAreaLengthUnits);
-
-    //initialize the array
+    playField[x] = malloc((sizeof(int)*playAreaLengthUnits));
     for (int y = 0; y < playAreaLengthUnits; y++) {
-      if (GetRandomValue(0, squares) < 10) { // shoot for 10
+      if (GetRandomValue(0, squares) < 10) {
         playField[x][y] = FOOD;
         foodCount++;
       } else {
@@ -53,6 +51,58 @@ void initGame() {
 
 void gameOver() {
   gameOverFlag = true;
+}
+
+Vector2 findNearestFood(Vector2 to) {
+  // an "orbit" is each consecutive circle around the center  111   22222
+  for (int orbit = 0; orbit < 10; orbit++) { //               101   20002
+    // check each side of that overall square that is defined 111   20002
+    for (int i = 0; i < (orbit*2)+1; i++) { // going clockwise      20002
+                                            //                      22222
+    }
+    for (int i = 0; i < (orbit*2)+1; i++) { 
+
+    }
+    for (int i = 0; i < (orbit*2)+1; i++) { 
+
+    }
+    for (int i = 0; i < (orbit*2)+1; i++) { 
+      
+    }
+  }
+}
+
+void moveBot() {
+  
+  //unset old position
+  playField[(int)botPos.x][(int)botPos.y] = NONE;
+  for (int i = 0; i < botLength; i++) {
+    playField[(int)botPositionHistory[i].x][(int)botPositionHistory[i].y] = NONE;
+  }
+
+  //update history array
+  for (int i = botLength; i > 0; i--) {
+    botPositionHistory[i] = botPositionHistory[i-1];
+  }
+  botPositionHistory[0] = botPos;
+
+  botPos = Vector2Add(botPos, dirs[botMovementDir]);
+  if (botPos.x > playAreaLengthUnits-1) {
+    botPos.x = 0;
+  }
+  if (botPos.x < 0) {
+    botPos.x = playAreaLengthUnits-1;
+  }
+  if (botPos.y > playAreaLengthUnits-1) {
+    botPos.y = 0;
+  }
+  if (botPos.y < 0) {
+    botPos.y = playAreaLengthUnits-1;
+  }
+
+  for (int i = 0; i < botLength; i++) {
+    playField[(int)botPositionHistory[i].x][(int)botPositionHistory[i].y] = PLAYER;
+  }
 }
 
 void movePlayer() {
@@ -130,6 +180,3 @@ void restartGame() {
   gameOverFlag = false;
 }
 
-void moveBot() {
-
-}
