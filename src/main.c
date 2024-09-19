@@ -11,6 +11,7 @@ int main() {
   float botUpdateTargetTimer = 0;
   initGame(false);
   mode = BOT_MODE;
+  botInfo = false;
 
   while (!WindowShouldClose()) {
     //logic before drawing
@@ -20,8 +21,8 @@ int main() {
       moveTimer += GetFrameTime();
       spawnTimer += GetFrameTime();
       botUpdateTargetTimer += GetFrameTime();
-      if (moveTimer > 0.20) {
-          if (mode == BOT_MODE) { moveBot(botUpdateTargetTimer > 5); }
+      if (moveTimer > 0.15) {
+          if (mode == BOT_MODE) { moveBot(botUpdateTargetTimer > 5); botUpdateTargetTimer = 0; }
           movePlayer();
           // checkCollision(); //this will need to be separate if there are two moving players
           moveTimer = 0;
