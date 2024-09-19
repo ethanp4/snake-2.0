@@ -84,6 +84,9 @@ void drawObjects() {
         case PLAYER:
           pixelColor = playerColor;
         break;
+        case BOT:
+          pixelColor = playerColor;
+        break;
       }
       DrawRectangleRec(pixel, pixelColor);
     }

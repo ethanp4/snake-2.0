@@ -3,6 +3,7 @@
 #include "input.h"
 #include "raylib.h"
 #include "raymath.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -29,12 +30,12 @@ Vector2 botPos = {15, 15};
 Vector2 playerPositionHistory[200];
 Vector2 botPositionHistory[200];
 
-void initGame() {
+void initGame(bool restart) {
   int squares = playAreaLengthUnits*playAreaLengthUnits;
 
-  playField = malloc((sizeof(int*)*playAreaLengthUnits));
+  if (!restart) { playField = malloc((sizeof(int*)*playAreaLengthUnits)); }
   for (int x = 0; x < playAreaLengthUnits; x++) {
-    playField[x] = malloc((sizeof(int)*playAreaLengthUnits));
+    if (!restart) { playField[x] = malloc((sizeof(int)*playAreaLengthUnits)); }
     for (int y = 0; y < playAreaLengthUnits; y++) {
       if (GetRandomValue(0, squares) < 10) {
         playField[x][y] = FOOD;
@@ -46,34 +47,98 @@ void initGame() {
   }
   playerMovementDir = GetRandomValue(0, 3);
   botMovementDir = GetRandomValue(0, 3);
-  // printf("Made %i food and %i none", foodCount, squares-foodCount);
 }
 
 void gameOver() {
   gameOverFlag = true;
 }
 
-Vector2 findNearestFood(Vector2 to) {
-  // an "orbit" is each consecutive circle around the center  111   22222
-  for (int orbit = 0; orbit < 10; orbit++) { //               101   20002
-    // check each side of that overall square that is defined 111   20002
-    for (int i = 0; i < (orbit*2)+1; i++) { // going clockwise      20002
-                                            //                      22222
-    }
-    for (int i = 0; i < (orbit*2)+1; i++) { 
-
-    }
-    for (int i = 0; i < (orbit*2)+1; i++) { 
-
-    }
-    for (int i = 0; i < (orbit*2)+1; i++) { 
-      
-    }
+Vector2 wrapVector(Vector2 vec) {
+  if (vec.x > playAreaLengthUnits-1) {
+    vec.x = 0;
   }
+  if (vec.x < 0) {
+    vec.x = playAreaLengthUnits-1;
+  }
+  if (vec.y > playAreaLengthUnits-1) {
+    vec.y = 0;
+  }
+  if (vec.y < 0) {
+    vec.y = playAreaLengthUnits-1;
+  }
+  return vec;
 }
 
-void moveBot() {
-  
+//returns input parameter if no food is found
+Vector2 findNearestFood(Vector2 to) {
+  // an "orbit" is each consecutive ring around the center
+  for (int orbit = 1; orbit <= 5; orbit++) {
+    Vector2 top_l = { to.x-orbit*2, to.y-orbit };
+    for (int i = 0; i < orbit*2+1; i++) { //top row going right
+      Vector2 v = { top_l.x+i, top_l.y };
+      // v = wrapVector(v);
+      if (!Vector2Equals(wrapVector(v), v)) {
+        continue;
+      }
+      if (playField[(int)v.x][(int)v.y] == FOOD) {
+        return v;
+      }
+    }
+    for (int i = 0; i < orbit*2+1; i++) { //left column downwards
+      Vector2 v = { top_l.x, top_l.y - i};
+      // v = wrapVector(v);
+      if (!Vector2Equals(wrapVector(v), v)) {
+        continue;
+      }
+      if (playField[(int)v.x][(int)v.y] == FOOD) {
+        return v;
+      }
+    }
+
+    Vector2 bottom_r = { to.x+orbit*2, to.y+orbit };
+    for (int i = 0; i < orbit*2+1; i++) { //bottom row going left
+      Vector2 v = { bottom_r.x-i, bottom_r.y };
+      // v = wrapVector(v);
+      if (!Vector2Equals(wrapVector(v), v)) {
+        continue;
+      }
+      if (playField[(int)v.x][(int)v.y] == FOOD) {
+        return v;
+      }
+    }
+    for (int i = 0; i < orbit*2+1; i++) { //right column going up
+      Vector2 v = { bottom_r.x, bottom_r.y+i};
+      // v = wrapVector(v);
+      if (!Vector2Equals(wrapVector(v), v)) {
+        continue;
+      }
+      if (playField[(int)v.x][(int)v.y] == FOOD) {
+        return v;
+      }
+    }
+  }
+  return to;
+}
+
+Vector2 nearestFood;
+void moveBot(bool updateTarget) {
+  //update the target if the food is no longer there or the timer went 
+  if (updateTarget || playField[(int)nearestFood.x][(int)nearestFood.y] != FOOD) {
+    nearestFood = findNearestFood(botPos);
+    if (!Vector2Equals(nearestFood, botPos)) {
+      printf("botPos: x: %.0f, y: %.0f\nnearestFood:x: %.0f, y: %.0f\n", botPos.x, botPos.y, nearestFood.x, nearestFood.y);
+      // botMovementDir
+      if (nearestFood.x > botPos.x) {
+        botMovementDir = LEFT;
+      } else if (nearestFood.x < botPos.x) {
+        botMovementDir = RIGHT;
+      } else if (nearestFood.y > botPos.y) {
+        botMovementDir = DOWN;
+      } else if (nearestFood.y < botPos.y) {
+        botMovementDir = UP;
+      }
+    } 
+  }
   //unset old position
   playField[(int)botPos.x][(int)botPos.y] = NONE;
   for (int i = 0; i < botLength; i++) {
@@ -87,22 +152,12 @@ void moveBot() {
   botPositionHistory[0] = botPos;
 
   botPos = Vector2Add(botPos, dirs[botMovementDir]);
-  if (botPos.x > playAreaLengthUnits-1) {
-    botPos.x = 0;
-  }
-  if (botPos.x < 0) {
-    botPos.x = playAreaLengthUnits-1;
-  }
-  if (botPos.y > playAreaLengthUnits-1) {
-    botPos.y = 0;
-  }
-  if (botPos.y < 0) {
-    botPos.y = playAreaLengthUnits-1;
-  }
+  botPos = wrapVector(botPos);
 
   for (int i = 0; i < botLength; i++) {
-    playField[(int)botPositionHistory[i].x][(int)botPositionHistory[i].y] = PLAYER;
+    playField[(int)botPositionHistory[i].x][(int)botPositionHistory[i].y] = BOT;
   }
+  playField[(int)botPos.x][(int)botPos.y] = BOT;
 }
 
 void movePlayer() {
@@ -173,7 +228,7 @@ void spawnFood() {
 }
 
 void restartGame() {
-  initGame();
+  initGame(true);
   if (playerLength > highScore) { highScore = playerLength; }
   playerLength = 0;
   startTime = GetTime();

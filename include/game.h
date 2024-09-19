@@ -2,11 +2,11 @@
 #define GAME_H
 #include <raylib.h>
 
-enum objects{ NONE, PLAYER, FOOD };
+enum objects{ NONE, PLAYER, FOOD, BOT };
 enum dirs { UP, DOWN, LEFT, RIGHT, NO_INPUT };
 extern Vector2 dirs[4];
 
-enum mode { SINGLE_PLAYER, BOT, TWO_PLAYER };
+enum mode { SINGLE_PLAYER, BOT_MODE, TWO_PLAYER };
 extern enum mode mode;
 
 extern enum dirs playerMovementDir;
@@ -28,8 +28,8 @@ extern Vector2 botPositionHistory[200];
 extern int** playField;
 
 void movePlayer();
-void moveBot();
-void initGame();
+void moveBot(bool updateTarget);
+void initGame(bool restart);
 void spawnFood();
 void restartGame();
 
