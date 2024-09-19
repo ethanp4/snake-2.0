@@ -4,6 +4,7 @@
 
 enum objects{ NONE, PLAYER, FOOD, BOT };
 enum dirs { UP, DOWN, LEFT, RIGHT, NO_INPUT };
+enum gameover_type { PLAYER_HIT_SELF, PLAYER_HIT_BOT, BOT_HIT_SELF, BOT_HIT_PLAYER };
 extern Vector2 dirs[4];
 
 enum mode { SINGLE_PLAYER, BOT_MODE, TWO_PLAYER };
@@ -20,6 +21,7 @@ extern int playerLength;
 extern int botLength;
 extern int foodCount;
 extern bool gameOverFlag;
+extern bool botInfo; // console info
 extern Vector2 playerPos;
 extern Vector2 botPos;
 
