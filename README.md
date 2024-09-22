@@ -1,2 +1,2 @@
 # game
-requires g++-14
+requires c compiler
